@@ -6,6 +6,7 @@
 class MovieManager {
     private:
         std::vector<Movie> movies;
+        int nextId;
     
     public:
         void addMovie(const Movie& movie);

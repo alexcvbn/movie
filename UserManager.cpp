@@ -1,4 +1,4 @@
-#include "UserManger.h"
+#include "UserManager.h"
 #include <iostream>
 #include <ostream>
 

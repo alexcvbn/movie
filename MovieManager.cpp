@@ -10,7 +10,9 @@ void MovieManager::addMovie(const Movie& movie) {
             return;
         }
     }
-    movies.push_back(movie);
+    Movie newMovie(nextId, movie.getTitle(), movie.getGenre(), movie.getReleaseYear());
+    nextId++;
+    movies.push_back(newMovie);
 }
 
 void MovieManager::printAll() const {
