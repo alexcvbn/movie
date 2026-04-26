@@ -13,9 +13,9 @@ std::string User::getEmail() const {return email;}
 
 
 void User::display() const {
-    std::cout << "ID: " << getId();
-    std::cout << "이름: " << getName();
-    std::cout << "이메일: " <<getEmail();
+    std::cout << "ID: " << getId() << "\n";
+    std::cout << "이름: " << getName() << "\n";
+    std::cout << "이메일: " <<getEmail() << "\n";
 
 }
 

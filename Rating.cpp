@@ -18,7 +18,7 @@ int Rating::getMovieid() const {return movieId;}
 std::string Rating::getUserid() const {return userId;}
 
 void Rating::display() const {
-    std::cout << "평점: " << getScore();
-    std::cout << "영화: " << getMovieid();
-    std::cout << "유저: " <<getUserid();
+    std::cout << "평점: " << getScore() << "\n";
+    std::cout << "영화: " << getMovieid() << "\n";
+    std::cout << "유저: " <<getUserid() << "\n";
 }
