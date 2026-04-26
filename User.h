@@ -1,4 +1,5 @@
 #pragma once
+#include <ostream>
 #include <string>
 
 class User {
@@ -17,6 +18,8 @@ class User {
         std::string getEmail() const;
 
         void display() const;
+
+        friend std::ostream& operator<<(std::ostream& os, const User& u);
 };
 
 
