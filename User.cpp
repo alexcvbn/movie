@@ -22,3 +22,8 @@ void User::display() const {
 bool User::operator==(const User& other) const {
     return id == other.id;
 }
+
+std::ostream& operator<<(std::ostream& os, const User& u) {
+    os << "ID: " << u.id << "  이름: " << u.name << "  이메일: " << u.email;
+    return os;
+}
