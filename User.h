@@ -20,6 +20,7 @@ class User {
         void display() const;
 
         friend std::ostream& operator<<(std::ostream& os, const User& u);
+        bool operator==(const User& other) const;
 };
 
 

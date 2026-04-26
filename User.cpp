@@ -19,4 +19,6 @@ void User::display() const {
 
 }
 
-
+bool User::operator==(const User& other) const {
+    return id == other.id;
+}

@@ -3,6 +3,12 @@
 #include <ostream>
 
 void UserManager::addUser(const User& user){
+    for (const auto& u : users) {
+        if (u == user) {
+            std::cout << "이미 등록된 사용자입니다.\n";
+            return;
+        }
+    }
     users.push_back(user);
 }
 

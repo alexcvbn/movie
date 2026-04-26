@@ -4,6 +4,12 @@
 
 
 void MovieManager::addMovie(const Movie& movie) {
+    for (const auto& m : movies) {
+        if (m == movie) {  
+            std::cout << "이미 등록되어 있는 영화입니다.\n";
+            return;
+        }
+    }
     movies.push_back(movie);
 }
 
