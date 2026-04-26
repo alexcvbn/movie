@@ -65,39 +65,80 @@ int main() {
             std::string userId, movieTitle;
             double score;
             std::cout << "유저 ID: "; std::cin >> userId;
-            std::cout << "영화 제목: "; std::cin >> movieTitle;
-            std::cout << "평점 (0~5): "; std::cin >> score;
-            try {
-                Movie* m = movieManager.findTitle(movieTitle);
-                if (!m) {
+            
+            User* u = userManager.findId(userId);
+            if (!u) {
+                std::cout << "없는 사용자입니다.\n";
+            } else {
+                std::cout << "영화 제목: "; std::cin >> movieTitle;
+                
+                std::vector<Movie*> found = movieManager.findAllByTitle(movieTitle);
+                
+                if (found.empty()) {
                     std::cout << "없는 영화입니다.\n";
-                } else {
-                    User* u = userManager.findId(userId);
-                    if (!u) {
-                        std::cout << "없는 사용자입니다.\n";
-                    } else {
-                        Rating r(userId, m->getId(), score);
+                } else if (found.size() == 1) {
+                    
+                    std::cout << "평점 (0~5): "; std::cin >> score;
+                    try {
+                        Rating r(userId, found[0]->getId(), score);
                         ratingManager.addRating(r);
-                        m->addRating(score);
+                        found[0]->addRating(score);
                         std::cout << "평점 등록 완료!\n";
+                    } catch (const std::exception& e) {
+                        std::cerr << "오류: " << e.what() << "\n";
+                    }
+                } else {
+                    // 여러 개면 목록 보여주고 ID 선택
+                    std::cout << "동일한 제목의 영화가 여러 개 있습니다.\n";
+                    for (const auto& m : found) {
+                        std::cout << *m << "\n";
+                    }
+                    int movieId;
+                    std::cout << "ID 선택: "; std::cin >> movieId;
+                    
+                    Movie* selected = movieManager.findMovieId(movieId);
+                    if (!selected) {
+                        std::cout << "없는 ID입니다.\n";
+                    } else {
+                        std::cout << "평점 (0~5): "; std::cin >> score;
+                        try {
+                            Rating r(userId, selected->getId(), score);
+                            ratingManager.addRating(r);
+                            selected->addRating(score);
+                            std::cout << "평점 등록 완료!\n";
+                        } catch (const std::exception& e) {
+                            std::cerr << "오류: " << e.what() << "\n";
+                        }
                     }
                 }
-            } catch (const std::exception& e) {
-                std::cerr << "오류: " << e.what() << "\n";
             }
+
 
         } else if (choice == 8) {
             std::string movieTitle;
             std::cout << "영화 제목: "; std::cin >> movieTitle;
-            Movie* m = movieManager.findTitle(movieTitle);
-            if (!m) {
+            
+            std::vector<Movie*> found = movieManager.findAllByTitle(movieTitle);
+            
+            if (found.empty()) {
                 std::cout << "없는 영화입니다.\n";
+            } else if (found.size() == 1) {
+                ratingManager.printRatings(found[0]->getId());
             } else {
-                ratingManager.printRatings(m->getId());
+                std::cout << "동일한 제목의 영화가 여러 개 있습니다.\n";
+                for (const auto& m : found) {
+                    std::cout << *m << "\n";
+                }
+                int movieId;
+                std::cout << "ID 선택: "; std::cin >> movieId;
+                Movie* selected = movieManager.findMovieId(movieId);
+                if (!selected) {
+                    std::cout << "없는 ID입니다.\n";
+                } else {
+                    ratingManager.printRatings(selected->getId());
+                }
             }
 
-        } else {
-            std::cout << "잘못된 입력입니다.\n";
         }
     }
 

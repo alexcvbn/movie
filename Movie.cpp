@@ -40,7 +40,8 @@ void Movie::display() const {           // 중복 제거 — 하나만 유지
 
 
 bool Movie::operator==(const Movie& other) const {
-    return title == other.title;
+    return title == other.title && releaseYear == other.releaseYear;
+    //제목과 출시년도까지 일단 같으면 동일 영화로 취급
 }
 
 bool Movie::operator<(const Movie& other) const {

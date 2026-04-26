@@ -40,3 +40,18 @@ Movie* MovieManager::findTitle(const std::string& title) {
     }
     return nullptr;
 }
+
+Movie* MovieManager::findMovieId(int id) {
+    for (auto& m : movies) {
+        if (m.getId() == id) return &m;
+    }
+    return nullptr;
+}
+
+std::vector<Movie*> MovieManager::findAllByTitle(const std::string& title) {
+    std::vector<Movie*> result;
+    for (auto& m : movies) {
+        if (m.getTitle() == title) result.push_back(&m);
+    }
+    return result;
+}
