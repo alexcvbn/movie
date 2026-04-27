@@ -12,7 +12,7 @@ int main() {
     int choice;
 
     while (true) {
-        std::cout << "\n=== Movie Recommender ===\n";
+        std::cout << "\n영화 평점 및 기록 프로그램\n";
         std::cout << "[ 영화 ]\n";
         std::cout << "1. 영화 추가\n";
         std::cout << "2. 제목으로 검색\n";
@@ -26,6 +26,7 @@ int main() {
         std::cout << "8. 영화별 평점 보기\n";
         std::cout << "0. 종료\n";
         std::cout << "선택 > ";
+        
         std::cin >> choice;
 
         if (choice == 0) break;
