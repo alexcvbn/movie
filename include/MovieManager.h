@@ -7,7 +7,7 @@
 class MovieManager : public BaseManager {
     private:
         std::vector<Movie> movies;
-        int nextId;
+        int nextId = 1;
     
     public:
         void addMovie(const Movie& movie);
@@ -21,6 +21,6 @@ class MovieManager : public BaseManager {
         void loadFromFile(const std::string& filename) override;
         void saveToFile(const std::string& filename) const override;
         int size() const override;
-
+        
 };
 
