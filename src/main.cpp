@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "MovieManager.h"
 #include "UserManager.h"
 #include "RatingManager.h"
+#include "Recommender.h"
 
 int main() {
     MovieManager movieManager;
@@ -16,7 +18,7 @@ int main() {
     int choice;
 
     while (true) {
-        std::cout << "\n영화 평점 및 기록 프로그램\n";
+        std::cout << "\n=== Movie Recommender ===\n";
         std::cout << "[ 영화 ]\n";
         std::cout << "1. 영화 추가\n";
         std::cout << "2. 제목으로 검색\n";
@@ -28,9 +30,10 @@ int main() {
         std::cout << "[ 평점 ]\n";
         std::cout << "7. 평점 입력\n";
         std::cout << "8. 영화별 평점 보기\n";
+        std::cout << "[ 추천 ]\n";
+        std::cout << "9. 영화 추천\n";
         std::cout << "0. 종료\n";
         std::cout << "선택 > ";
-        
         std::cin >> choice;
 
         if (choice == 0) break;
@@ -70,19 +73,17 @@ int main() {
             std::string userId, movieTitle;
             double score;
             std::cout << "유저 ID: "; std::cin >> userId;
-            
+
             User* u = userManager.findId(userId);
             if (!u) {
                 std::cout << "없는 사용자입니다.\n";
             } else {
                 std::cout << "영화 제목: "; std::cin >> movieTitle;
-                
                 std::vector<Movie*> found = movieManager.findAllByTitle(movieTitle);
-                
+
                 if (found.empty()) {
                     std::cout << "없는 영화입니다.\n";
                 } else if (found.size() == 1) {
-                    
                     std::cout << "평점 (0~5): "; std::cin >> score;
                     try {
                         Rating r(userId, found[0]->getId(), score);
@@ -93,14 +94,12 @@ int main() {
                         std::cerr << "오류: " << e.what() << "\n";
                     }
                 } else {
-                    // 여러 개면 목록 보여주고 ID 선택
                     std::cout << "동일한 제목의 영화가 여러 개 있습니다.\n";
                     for (const auto& m : found) {
                         std::cout << *m << "\n";
                     }
                     int movieId;
                     std::cout << "ID 선택: "; std::cin >> movieId;
-                    
                     Movie* selected = movieManager.findMovieId(movieId);
                     if (!selected) {
                         std::cout << "없는 ID입니다.\n";
@@ -118,13 +117,11 @@ int main() {
                 }
             }
 
-
         } else if (choice == 8) {
             std::string movieTitle;
             std::cout << "영화 제목: "; std::cin >> movieTitle;
-            
             std::vector<Movie*> found = movieManager.findAllByTitle(movieTitle);
-            
+
             if (found.empty()) {
                 std::cout << "없는 영화입니다.\n";
             } else if (found.size() == 1) {
@@ -144,12 +141,27 @@ int main() {
                 }
             }
 
+        } else if (choice == 9) {
+            std::string userId;
+            std::cout << "유저 ID: "; std::cin >> userId;
+            Recommender recommender(movieManager, userManager, ratingManager);
+            std::vector<Movie> result = recommender.recommend(userId);
+            if (!result.empty()) {
+                std::cout << "추천 영화 목록:\n";
+                for (const auto& m : result) {
+                    std::cout << m << "\n";
+                }
+            }
+
+        } else {
+            std::cout << "잘못된 입력입니다.\n";
         }
     }
+
     movieManager.saveToFile("data/movies.csv");
     userManager.saveToFile("data/users.csv");
     ratingManager.saveToFile("data/ratings.csv");
-    
+
     std::cout << "종료합니다.\n";
     return 0;
 }
