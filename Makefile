@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -g
+CXXFLAGS = -Wall -std=c++17 -g -Iinclude
 
 TARGET = movie_recommender
 
@@ -20,12 +20,12 @@ run: $(TARGET)
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-src/main.o: src/main.cpp src/MovieManager.h src/UserManager.h src/RatingManager.h
-src/MovieManager.o: src/MovieManager.cpp src/MovieManager.h src/Movie.h
-src/UserManager.o: src/UserManager.cpp src/UserManager.h src/User.h
-src/RatingManager.o: src/RatingManager.cpp src/RatingManager.h src/Rating.h
-src/Movie.o: src/Movie.cpp src/Movie.h
-src/User.o: src/User.cpp src/User.h
-src/Rating.o: src/Rating.cpp src/Rating.h
-src/SimilarityCalculator.o: src/SimilarityCalculator.cpp src/SimilarityCalculator.h src/Rating.h
-src/Recommender.o: src/Recommender.cpp src/Recommender.h src/MovieManager.h src/UserManager.h src/RatingManager.h src/SimilarityCalculator.h
+src/main.o: src/main.cpp include/MovieManager.h include/UserManager.h include/RatingManager.h include/Recommender.h
+src/MovieManager.o: src/MovieManager.cpp include/MovieManager.h include/Movie.h include/BaseManager.h
+src/UserManager.o: src/UserManager.cpp include/UserManager.h include/User.h include/BaseManager.h
+src/RatingManager.o: src/RatingManager.cpp include/RatingManager.h include/Rating.h include/BaseManager.h
+src/Movie.o: src/Movie.cpp include/Movie.h
+src/User.o: src/User.cpp include/User.h
+src/Rating.o: src/Rating.cpp include/Rating.h
+src/SimilarityCalculator.o: src/SimilarityCalculator.cpp include/SimilarityCalculator.h include/Rating.h
+src/Recommender.o: src/Recommender.cpp include/Recommender.h include/MovieManager.h include/UserManager.h include/RatingManager.h include/SimilarityCalculator.h
