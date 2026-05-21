@@ -1,6 +1,9 @@
 #include "UserManager.h"
 #include <iostream>
 #include <ostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 void UserManager::addUser(const User& user){
     for (const auto& u : users) {
@@ -29,4 +32,42 @@ User* UserManager::findId(const std::string& id){
     }
 
     return nullptr;
+}
+
+void UserManager::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cout << filename << " 파일 없음, 빈 상태로 시작\n";
+        return;
+    }
+    std::string line;
+    getline(file, line); // 헤더 스킵
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        getline(ss, token, ','); std::string id = token;
+        getline(ss, token, ','); std::string name = token;
+        getline(ss, token, ','); std::string email = token;
+        users.push_back(User(id, name, email));
+    }
+    file.close();
+}
+
+void UserManager::saveToFile(const std::string& filename) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << filename << " 저장 실패\n";
+        return;
+    }
+    file << "id,name,email\n";
+    for (const auto& u : users) {
+        file << u.getId() << ","
+             << u.getName() << ","
+             << u.getEmail() << "\n";
+    }
+    file.close();
+}
+
+int UserManager::size() const {
+    return users.size();
 }
