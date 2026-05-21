@@ -58,3 +58,13 @@ void RatingManager::saveToFile(const std::string& filename) const {
 int RatingManager::size() const {
     return ratings.size();
 }
+
+std::vector<Rating> RatingManager::findByUser(const std::string& userId) const {
+    std::vector<Rating> result;
+    for (const auto& r : ratings) {
+        if (r.getUserid() == userId) {
+            result.push_back(r);
+        }
+    }
+    return result;
+}

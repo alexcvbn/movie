@@ -9,6 +9,10 @@ int main() {
     UserManager userManager;
     RatingManager ratingManager;
 
+    movieManager.loadFromFile("data/movies.csv");
+    userManager.loadFromFile("data/users.csv");
+    ratingManager.loadFromFile("data/ratings.csv");
+
     int choice;
 
     while (true) {
@@ -142,7 +146,10 @@ int main() {
 
         }
     }
-
+    movieManager.saveToFile("data/movies.csv");
+    userManager.saveToFile("data/users.csv");
+    ratingManager.saveToFile("data/ratings.csv");
+    
     std::cout << "종료합니다.\n";
     return 0;
 }

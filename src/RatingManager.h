@@ -12,4 +12,5 @@ class RatingManager: public BaseManager {
         void loadFromFile(const std::string& filename) override;
         void saveToFile(const std::string& filename) const override;
         int size() const override;
+        std::vector<Rating> findByUser(const std::string& userId) const;
 };
