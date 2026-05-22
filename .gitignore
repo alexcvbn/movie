@@ -1,2 +1,4 @@
 *.o
 movie_recommender
+
+.vscode/
