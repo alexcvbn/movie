@@ -1,10 +1,9 @@
 #include "MovieManager.h"
-#include "Movie.h"
-#include <cstdio>
 #include <iostream>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 void MovieManager::addMovie(const Movie& movie) {
@@ -52,6 +51,7 @@ Movie* MovieManager::findMovieId(int id) {
     return nullptr;
 }
 
+
 std::vector<Movie*> MovieManager::findAllByTitle(const std::string& title) {
     std::vector<Movie*> result;
     for (auto& m : movies) {
@@ -71,20 +71,24 @@ void MovieManager::loadFromFile(const std::string& filename){
     getline(file, line);
     
     while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string token;
-        getline(ss, token, ','); int id = stoi(token);
-        getline(ss, token, ','); std::string title = token;
-        getline(ss, token, ','); std::string genre = token;
-        getline(ss, token, ','); int year = stoi(token);
-        getline(ss, token, ','); double totalRating = stod(token);
-        getline(ss, token, ','); int ratingCount = stoi(token);
-        Movie m(id, title, genre, year);
-        for (int i = 0; i < ratingCount; i++) {
-            m.addRating(totalRating / ratingCount);
+        try {
+            std::stringstream ss(line);
+            std::string token;
+            getline(ss, token, ','); int id = stoi(token);
+            getline(ss, token, ','); std::string title = token;
+            getline(ss, token, ','); std::string genre = token;
+            getline(ss, token, ','); int year = stoi(token);
+            getline(ss, token, ','); double totalRating = stod(token);
+            getline(ss, token, ','); int ratingCount = stoi(token);
+            Movie m(id, title, genre, year);
+            for (int i = 0; i < ratingCount; i++) {
+                m.addRating(totalRating / ratingCount);
+            }
+            movies.push_back(m);
+            if (id >= nextId) nextId = id + 1;
+        } catch (const std::exception& e) {
+            std::cerr << "movies.csv 파싱 오류, 해당 줄 스킵: " << line << "\n";
         }
-        movies.push_back(m);
-        if (id >= nextId) nextId = id + 1;
     }
     file.close();
 }

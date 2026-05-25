@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 void RatingManager::addRating(const Rating& rating) {
@@ -28,14 +29,18 @@ void RatingManager::loadFromFile(const std::string& filename) {
         return;
     }
     std::string line;
-    getline(file, line); // 헤더 스킵
+    getline(file, line);
     while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string token;
-        getline(ss, token, ','); std::string userId = token;
-        getline(ss, token, ','); int movieId = stoi(token);
-        getline(ss, token, ','); double score = stod(token);
-        ratings.push_back(Rating(userId, movieId, score));
+        try {
+            std::stringstream ss(line);
+            std::string token;
+            getline(ss, token, ','); std::string userId = token;
+            getline(ss, token, ','); int movieId = stoi(token);
+            getline(ss, token, ','); double score = stod(token);
+            ratings.push_back(Rating(userId, movieId, score));
+        } catch (const std::exception& e) {
+            std::cerr << "ratings.csv 파싱 오류, 해당 줄 스킵: " << line << "\n";
+        }
     }
     file.close();
 }

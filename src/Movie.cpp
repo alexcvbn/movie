@@ -1,17 +1,27 @@
 #include "Movie.h"
+#include "Rating.h"
 #include <iostream>
+#include <stdexcept>
 
-// 기본 생성자
+static constexpr int MIN_YEAR = 1888;
+static constexpr int MAX_YEAR = 2100;
+
 Movie::Movie()
     : id(0), releaseYear(0),
       totalRating(0.0), ratingCount(0) {}
 
-// 4인자 생성자
 Movie::Movie(int id, const std::string& title,
              const std::string& genre, int year)
     : id(id), title(title), genre(genre),
       releaseYear(year),
-      totalRating(0.0), ratingCount(0) {}
+      totalRating(0.0), ratingCount(0)
+{
+    if (title.empty())
+        throw std::invalid_argument("제목이 비어 있습니다.");
+    if (year < MIN_YEAR || year > MAX_YEAR)
+        throw std::out_of_range("연도는 " + std::to_string(MIN_YEAR) +
+                                "~" + std::to_string(MAX_YEAR) + " 사이여야 합니다.");
+}
 
 int         Movie::getId()           const { return id; }
 std::string Movie::getTitle()        const { return title; }
@@ -20,32 +30,23 @@ int         Movie::getReleaseYear()  const { return releaseYear; }
 int         Movie::getRatingCount()  const { return ratingCount; }
 
 double Movie::getAverageRating() const {
-    if (ratingCount == 0) return 0.0;   // 0 나눗셈 방어
+    if (ratingCount == 0) return 0.0;
     return totalRating / ratingCount;
 }
 
 void Movie::addRating(double r) {
-    if (r < 0.0 || r > 5.0) return;    // 유효성 검사
+    if (r < Rating::MIN_SCORE || r > Rating::MAX_SCORE) return;
     totalRating += r;
     ratingCount++;
-}
-
-void Movie::display() const {           // 중복 제거 — 하나만 유지
-    std::cout << id << ". " << title
-              << " (" << releaseYear << ")"
-              << "  평점: " << getAverageRating()
-              << " (" << ratingCount << "건)"
-              << std::endl;
 }
 
 
 bool Movie::operator==(const Movie& other) const {
     return title == other.title && releaseYear == other.releaseYear;
-    //제목과 출시년도까지 일단 같으면 동일 영화로 취급
 }
 
 bool Movie::operator<(const Movie& other) const {
-    return getAverageRating() > other.getAverageRating(); // 높은 평점이 앞으로
+    return getAverageRating() > other.getAverageRating();
 }
 
 std::ostream& operator<<(std::ostream& os, const Movie& m) {

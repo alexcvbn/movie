@@ -22,8 +22,7 @@ public:
     double      getAverageRating()   const;  // getRating → getAverageRating
     int         getRatingCount()     const;  // 추가
 
-    void addRating(double r);               // 추가
-    void display()               const;
+    void addRating(double r);
 
     bool operator==(const Movie& other) const;
     bool operator<(const Movie& other) const;

@@ -1,14 +1,12 @@
 #include "SimilarityCalculator.h"
-#include "Rating.h"
-#include <vector>
-#include <cstdlib>
+#include <cmath>
 
 int SimilarityCalculator::calculate(
     const std::vector<Rating>& user1,
     const std::vector<Rating>& user2)
 {
-    int commonCount = 0;
-    int scoreDiffSum = 0;
+    int    commonCount   = 0;
+    double scoreDiffSum  = 0.0;
 
     for (const Rating& r1 : user1) {
         for (const Rating& r2 : user2) {
@@ -19,9 +17,7 @@ int SimilarityCalculator::calculate(
         }
     }
 
-    if (commonCount == 0) return -100;
+    if (commonCount == 0) return NO_COMMON_SCORE;
 
-    // 평점 차이에 가중치 2 적용, 평점의 유사도를 더 중요하게 생각했음
-   
-    return commonCount * 10 - (scoreDiffSum * 2);
+    return static_cast<int>(commonCount * COMMON_BONUS - scoreDiffSum * SCORE_DIFF_WEIGHT);
 }

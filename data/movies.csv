@@ -1,3 +1,11 @@
 id,title,genre,year,totalRating,ratingCount
-0,살목지,공포,2026,9,2
-1,살목지2,공포,2027,5,1
+1,Inception,SF,2010,14.5,4
+2,Interstellar,SF,2014,13,3
+3,Shawshank,Drama,1994,4.5,1
+4,Parasite,Thriller,2019,8.5,2
+5,Godfather,Crime,1972,5,1
+6,Avengers,Action,2019,8.5,2
+7,Titanic,Romance,1997,5,1
+8,DarkKnight,Action,2008,12.5,3
+9,Whiplash,Drama,2014,8.5,2
+10,LaLaLand,Romance,2016,4.5,1

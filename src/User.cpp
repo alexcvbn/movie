@@ -1,10 +1,15 @@
 #include "User.h"
 #include <iostream>
+#include <stdexcept>
 
 User::User() : id(""), name(""), email("") {}
 
 User::User(std::string id, const std::string& name, const std::string& email)
-    : id(id), name(name), email(email) {}
+    : id(id), name(name), email(email)
+{
+    if (id.empty())
+        throw std::invalid_argument("사용자 ID가 비어 있습니다.");
+}
     
 
 std::string User::getId()    const {return id;}
@@ -12,12 +17,6 @@ std::string User::getName() const {return name;}
 std::string User::getEmail() const {return email;}
 
 
-void User::display() const {
-    std::cout << "ID: " << getId() << "\n";
-    std::cout << "이름: " << getName() << "\n";
-    std::cout << "이메일: " <<getEmail() << "\n";
-
-}
 
 bool User::operator==(const User& other) const {
     return id == other.id;

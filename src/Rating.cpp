@@ -1,14 +1,13 @@
 #include "Rating.h"
-#include <stdexcept> 
+#include <stdexcept>
 #include <iostream>
-#include <string>
 
 
 Rating::Rating(std::string userId, int movieId, double score)
     : userId(userId), movieId(movieId), score(score) 
 {
     
-    if (score < 0.0 || score > 5.0) {
+    if (score < MIN_SCORE || score > MAX_SCORE) {
         throw std::invalid_argument("별점은 0.0에서 5.0 사이여야 합니다.");
     }
 }

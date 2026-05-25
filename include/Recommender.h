@@ -7,6 +7,9 @@
 #include "SimilarityCalculator.h"
 
 class Recommender {
+public:
+    static constexpr double MIN_RECOMMEND_SCORE = 3.0;
+
 private:
     MovieManager& movieManager;
     UserManager& userManager;

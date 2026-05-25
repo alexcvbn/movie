@@ -1,8 +1,8 @@
 #include "UserManager.h"
 #include <iostream>
-#include <ostream>
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 void UserManager::addUser(const User& user){
@@ -41,14 +41,18 @@ void UserManager::loadFromFile(const std::string& filename) {
         return;
     }
     std::string line;
-    getline(file, line); // 헤더 스킵
+    getline(file, line);
     while (getline(file, line)) {
-        std::stringstream ss(line);
-        std::string token;
-        getline(ss, token, ','); std::string id = token;
-        getline(ss, token, ','); std::string name = token;
-        getline(ss, token, ','); std::string email = token;
-        users.push_back(User(id, name, email));
+        try {
+            std::stringstream ss(line);
+            std::string token;
+            getline(ss, token, ','); std::string id = token;
+            getline(ss, token, ','); std::string name = token;
+            getline(ss, token, ','); std::string email = token;
+            users.push_back(User(id, name, email));
+        } catch (const std::exception& e) {
+            std::cerr << "users.csv 파싱 오류, 해당 줄 스킵: " << line << "\n";
+        }
     }
     file.close();
 }
@@ -72,6 +76,6 @@ int UserManager::size() const {
     return users.size();
 }
 
-std::vector<User> UserManager::getAllUsers() const {
+const std::vector<User>& UserManager::getAllUsers() const {
     return users;
 }
