@@ -32,7 +32,6 @@ void printMenu() {
     std::cout << "선택 > ";
 }
 
-// 동일 제목 영화가 여러 개일 때 사용자가 하나를 고르도록 함
 Movie* selectMovieByTitle(MovieManager& mm, const std::string& title) {
     std::vector<Movie*> found = mm.findAllByTitle(title);
     if (found.empty()) {
@@ -141,7 +140,6 @@ void handleRecommend(MovieManager& mm, UserManager& um, RatingManager& rm) {
     std::cin.ignore();
     std::getline(std::cin, genreFilter);
 
-    // 로딩바 애니메이션 표시
     ConsoleUI::showProgressBar("유사 사용자 매칭 및 평점 분석 중", 700);
 
     Recommender recommender(mm, um, rm);

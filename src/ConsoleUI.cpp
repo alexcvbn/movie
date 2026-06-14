@@ -22,7 +22,6 @@ namespace ConsoleUI {
         printDivider('=', 70);
     }
 
-    // UTF-8 문자열의 한글(2칸)과 영문/숫자(1칸)를 고려한 실제 출력 너비를 계산합니다.
     static int getVisualWidth(const std::string& str) {
         int width = 0;
         for (size_t i = 0; i < str.length();) {
@@ -34,7 +33,6 @@ namespace ConsoleUI {
                 width += 2;
                 i += 2;
             } else if ((c & 0xF0) == 0xE0) {
-                // 한글 등 3바이트 UTF-8 문자는 콘솔 상에서 2칸을 차지합니다.
                 width += 2;
                 i += 3;
             } else if ((c & 0xF8) == 0xF0) {
@@ -48,7 +46,6 @@ namespace ConsoleUI {
         return width;
     }
 
-    // 주어진 visual 너비에 맞춰 문자열 뒤에 공백 패딩을 추가합니다.
     static std::string padString(const std::string& str, int targetWidth) {
         int curWidth = getVisualWidth(str);
         if (curWidth >= targetWidth) return str;
@@ -61,12 +58,10 @@ namespace ConsoleUI {
             return;
         }
 
-        // 테두리 문자 정의 (단순한 ASCII 스타일)
         const std::string border = "+----+------------------------------+--------------+--------+----------+";
 
         std::cout << border << "\n";
         
-        // 헤더 출력
         std::cout << "| " << padString("ID", 2) << " | "
                   << padString("영화 제목", 28) << " | "
                   << padString("장르", 12) << " | "
@@ -76,7 +71,6 @@ namespace ConsoleUI {
         std::cout << border << "\n";
 
         for (const auto& m : movies) {
-            // 평점을 소수점 2자리 문자열로 변환
             std::stringstream ssRating;
             ssRating << std::fixed << std::setprecision(2) << m.getAverageRating();
 
@@ -102,7 +96,6 @@ namespace ConsoleUI {
         printHeader("장르별 평균 평점 통계 시각화");
 
         for (const auto& [genre, rating] : genreStats) {
-            // 평점을 0.0 ~ 5.0 기준 25칸 스케일로 정규화
             int barLength = static_cast<int>((rating / 5.0) * 25.0);
             if (barLength > 25) barLength = 25;
             if (barLength < 0) barLength = 0;

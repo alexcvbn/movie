@@ -17,7 +17,6 @@ class MovieManager : public BaseManager {
         Movie* findTitle(const std::string& title);
         Movie* findMovieId(int id);
         std::vector<Movie*> findAllByTitle(const std::string& title);
-        //겹치는 영화 목록 출력이 가능하게 하는 함수!
 
         const std::vector<Movie>& getAllMovies() const;
         std::vector<Movie> filterByGenre(const std::string& genre) const;
