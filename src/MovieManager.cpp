@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <numeric>
 
 void MovieManager::addMovie(const Movie& movie) {
     for (const auto& m : movies) {
@@ -113,4 +114,92 @@ void MovieManager::saveToFile(const std::string& filename) const {
 
 int MovieManager::size() const {
     return movies.size();
+}
+
+const std::vector<Movie>& MovieManager::getAllMovies() const {
+    return movies;
+}
+
+std::vector<Movie> MovieManager::filterByGenre(const std::string& genre) const {
+    std::vector<Movie> result;
+    std::copy_if(movies.begin(), movies.end(), std::back_inserter(result),
+        [&genre](const Movie& m) {
+            return m.getGenre() == genre;
+        }
+    );
+    return result;
+}
+
+double MovieManager::getAverageRating() const {
+    if (movies.empty()) {
+        throw std::runtime_error("영화 데이터가 없습니다.");
+    }
+    double sum = std::accumulate(movies.begin(), movies.end(), 0.0,
+        [](double acc, const Movie& m) {
+            return acc + m.getAverageRating();
+        }
+    );
+    return sum / movies.size();
+}
+
+std::map<std::string, double> MovieManager::getAverageRatingByGenre() const {
+    std::map<std::string, double> sumByGenre;
+    std::map<std::string, int> countByGenre;
+    
+    for (const auto& movie : movies) {
+        sumByGenre[movie.getGenre()] += movie.getAverageRating();
+        countByGenre[movie.getGenre()]++;
+    }
+    
+    std::map<std::string, double> avgByGenre;
+    for (const auto& [genre, sum] : sumByGenre) {
+        avgByGenre[genre] = sum / countByGenre[genre];
+    }
+    return avgByGenre;
+}
+
+std::vector<Movie> MovieManager::getTopN(int n) const {
+    auto sorted = movies;
+    if (n > static_cast<int>(sorted.size())) {
+        n = sorted.size();
+    }
+    std::partial_sort(sorted.begin(), sorted.begin() + n, sorted.end(),
+        [](const Movie& m1, const Movie& m2) {
+            return m1.getAverageRating() > m2.getAverageRating();
+        }
+    );
+    return std::vector<Movie>(sorted.begin(), sorted.begin() + n);
+}
+
+bool MovieManager::exportStatisticsReport(const std::string& filename) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) return false;
+    
+    file << "==================================================\n";
+    file << "       영화 추천 시스템 통계 리포트 (M4)\n";
+    file << "==================================================\n\n";
+    
+    try {
+        file << "1. 전체 영화 평균 평점: " << getAverageRating() << " 점\n\n";
+    } catch (const std::exception& e) {
+        file << "1. 전체 영화 평균 평점: N/A (데이터 없음)\n\n";
+    }
+    
+    file << "2. 장르별 평균 평점:\n";
+    auto genreStats = getAverageRatingByGenre();
+    for (const auto& [genre, rating] : genreStats) {
+        file << "   - " << genre << ": " << rating << " 점\n";
+    }
+    file << "\n";
+    
+    file << "3. 평점 상위 5개 영화:\n";
+    auto top5 = getTopN(5);
+    for (size_t i = 0; i < top5.size(); ++i) {
+        file << "   " << (i + 1) << "위. " << top5[i].getTitle() 
+             << " (평점: " << top5[i].getAverageRating() << " 점, " 
+             << top5[i].getRatingCount() << "건 평가)\n";
+    }
+    
+    file.close();
+    return true;
 }

@@ -17,5 +17,5 @@ private:
 
 public:
     Recommender(MovieManager& mm, UserManager& um, RatingManager& rm);
-    std::vector<Movie> recommend(const std::string& userId);
+    std::vector<Movie> recommend(const std::string& userId, const std::string& genreFilter = "");
 };

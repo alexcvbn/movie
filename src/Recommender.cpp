@@ -4,7 +4,7 @@
 Recommender::Recommender(MovieManager& mm, UserManager& um, RatingManager& rm)
     : movieManager(mm), userManager(um), ratingManager(rm) {}
 
-std::vector<Movie> Recommender::recommend(const std::string& userId) {
+std::vector<Movie> Recommender::recommend(const std::string& userId, const std::string& genreFilter) {
     
     std::vector<Rating> myRatings = ratingManager.findByUser(userId);
 
@@ -46,7 +46,11 @@ std::vector<Movie> Recommender::recommend(const std::string& userId) {
         }
         if (!alreadySeen && r.getScore() >= MIN_RECOMMEND_SCORE) {
             Movie* m = movieManager.findMovieId(r.getMovieid());
-            if (m) result.push_back(*m);
+            if (m) {
+                if (genreFilter.empty() || m->getGenre() == genreFilter) {
+                    result.push_back(*m);
+                }
+            }
         }
     }
 
